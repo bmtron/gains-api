@@ -115,7 +115,7 @@ app.MapPost("/workout", async (WorkoutDto workoutDto) =>
 {
     var dataAccess = new DataAccessor(app.Configuration["DB_CONN"] ?? "connection string error");
     var result = await dataAccess.AddWorkout(workoutDto);
-    return false;
+    return result;
 });
 app.Run();
 
