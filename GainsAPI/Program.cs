@@ -117,6 +117,13 @@ app.MapPost("/workout", async (WorkoutDto workoutDto) =>
     var result = await dataAccess.AddWorkout(workoutDto);
     return result;
 });
+
+app.MapPost("/exercise/new", async (ExerciseDto exerciseDto) =>
+{
+    var dataAccess = new DataAccessor(app.Configuration["DB_CONN"] ?? "connection string error");
+    var result = await dataAccess.AddExerciseWithResult(exerciseDto);
+    return result;
+});
 app.Run();
 
 

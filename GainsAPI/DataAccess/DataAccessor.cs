@@ -46,7 +46,29 @@ public class DataAccessor
 
         return true;
     }
+    public async Task<int> AddExerciseWithResult(ExerciseDto exercise)
+    {
+        var newExercise = new Exercise
+        {
+            Exercisename = exercise.Name,
+            Notes = exercise.Notes,
+            Musclegroupid = exercise.MuscleGroupId,
+            Dateadded = DateTime.Now,
+        };
+        
+        try
+        {
+            await _gainsContext.Exercises.AddAsync(newExercise);
+            await _gainsContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return -1;
+        }
 
+        return newExercise.Exerciseid;
+    }
     public async Task<bool> SyncExercises(List<ExerciseModelFromMobile> exerciseDtos)
     {
         var existingExercises = await _gainsContext.Exercises.ToListAsync();
@@ -110,7 +132,7 @@ public class DataAccessor
 
         var sets = workoutDto.ExerciseSets.Select(set => new Exerciseset
             {
-                Exerciseid = set.exerciseid,
+                Exerciseid = set.exerciseserverid,
                 Estimatedrpe = set.estimatedrpe,
                 Repetitions = set.repetitions,
                 Weightunitlookupid = set.weightunitlookupid,
@@ -143,7 +165,7 @@ public class DataAccessor
         var rawSets = await _gainsContext.Exercisesets.ToListAsync();
         var sets = rawSets.Select(set => new ExerciseSetDto
         {
-            exerciseid = set.Exerciseid,
+            exerciseserverid = set.Exerciseid,
             estimatedrpe = set.Estimatedrpe,
             repetitions = set.Repetitions,
             weightunitlookupid = set.Weightunitlookupid,
@@ -157,7 +179,7 @@ public class DataAccessor
     {
         var newSet = new Exerciseset
         {
-            Exerciseid = exerciseSet.exerciseid,
+            Exerciseid = exerciseSet.exerciseserverid,
             Estimatedrpe = exerciseSet.estimatedrpe,
             Repetitions = exerciseSet.repetitions,
             Weightunitlookupid = exerciseSet.weightunitlookupid,
